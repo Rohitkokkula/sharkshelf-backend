@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB")
+}
+
+model FAQ {
+  id          Int      @id @default(autoincrement())
+  question    String   @unique @db.VarChar(255)
+  answer      String   @db.Text
+  status      Boolean  @default(true)
+  created_on  DateTime @db.Timestamp(0)
+  modified_on DateTime @default(now()) @db.Timestamp(0)
+}
+
+model cart {
+  id          Int      @id @default(autoincrement())
+  quantity    Int
+  product_id  Int?
+  product     product? @relation(fields: [product_id], references: [id], onDelete: SetNull)
+  user_id     Int?
+  created_on  DateTime @db.Timestamp(0)
+  modified_on DateTime @default(now()) @db.Timestamp(0)
+}
+
+model order {
+  id              Int          @id @default(autoincrement())
+  total           Float        @default(0)
+  payment_id      String
+  pay_method      String
+  delivery_status String       @default("pending")
+  order_mode      String
+  user_id         Int?
+  created_on      DateTime     @db.Timestamp(0)
+  modified_on     DateTime     @default(now()) @db.Timestamp(0)
+  order_item      order_item[]
+}
+
+model order_item {
+  id         Int      @id @default(autoincrement())
+  quantity   Int
+  product_id Int?
+  product    product? @relation(fields: [product_id], references: [id], onDelete: SetNull)
+  order_id   Int?
+  order      order?   @relation(fields: [order_id], references: [id], onDelete: SetNull)
+}
+
+model product {
+  id             Int          @id @default(autoincrement())
+  name           String       @unique @db.VarChar(255)
+  description    String       @db.Text
+  imageurl       String       @db.VarChar(255)
+  price          Float
+  offer_price    Float
+  status         Boolean      @default(true)
+  color_id       Int?
+  color          color?       @relation(fields: [color_id], references: [id], onDelete: SetNull)
+  category_id    Int?
+  category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  subcategory_id Int?
+  subcategory    subcategory? @relation(fields: [subcategory_id], references: [id], onDelete: SetNull)
+  size_id        Int?
+  size           size?        @relation(fields: [size_id], references: [id], onDelete: SetNull)
+  created_on     DateTime     @db.Timestamp(0)
+  modified_on    DateTime     @default(now()) @db.Timestamp(0)
+  order_item     order_item[]
+  cart           cart[]
+}
+
+model color {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  created_on  DateTime  @db.Timestamp(0)
+  modified_on DateTime  @default(now()) @db.Timestamp(0)
+  product     product[]
+}
+
+model size {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  created_on  DateTime  @db.Timestamp(0)
+  modified_on DateTime  @default(now()) @db.Timestamp(0)
+  product     product[]
+}
+
+model category {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique @db.VarChar(50)
+  created_on  DateTime      @db.Timestamp(0)
+  modified_on DateTime      @default(now()) @db.Timestamp(0)
+  subcategory subcategory[]
+  product     product[]
+}
+
+model subcategory {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  category_id Int?
+  category    category? @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  created_on  DateTime  @db.Timestamp(0)
+  modified_on DateTime  @default(now()) @db.Timestamp(0)
+  product     product[]
+}
