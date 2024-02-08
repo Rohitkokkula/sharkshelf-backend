@@ -11,6 +11,7 @@ import auth from "../middlewares/checkAuth.js";
 import ApiError from '../utils/ApiError.js';
 import { sendresponse } from '../utils/utils.js';
 import sizeRoutes from "../routes/size.js";
+import cartRoutes from "../routes/cart.js";
 
 export default (app) => {
     app.get('/', async (req, res) => res.send('Hello! Welcome To PAYX'));
@@ -25,6 +26,7 @@ export default (app) => {
     app.use("/subcategory", subcategoryRoutes);
     app.use("/image",imageRoutes);
     app.use("/size",sizeRoutes);
+    app.use("/cart",cartRoutes);
     app.use("/terms",(req,res,next)=>sendresponse(res, {"terms":"Terms and Conditions" },200,req));
     app.use((req, res, next) => next(new ApiError(401,'Not found')));
     app.use(errorHandler);
