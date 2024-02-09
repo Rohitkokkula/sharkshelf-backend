@@ -56,14 +56,12 @@ model product {
   price          Float
   offer_price    Float
   status         Boolean      @default(true)
-  color_id       Int?
-  color          color?       @relation(fields: [color_id], references: [id], onDelete: SetNull)
+  color          String?
+  size           String?
   category_id    Int?
   category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)
   subcategory_id Int?
   subcategory    subcategory? @relation(fields: [subcategory_id], references: [id], onDelete: SetNull)
-  size_id        Int?
-  size           size?        @relation(fields: [size_id], references: [id], onDelete: SetNull)
   created_on     DateTime     @db.Timestamp(0)
   modified_on    DateTime     @default(now()) @db.Timestamp(0)
   order_item     order_item[]
@@ -72,22 +70,6 @@ model product {
   wishlist       wishlist[]
   popular        popular[]
   deal           deal[]
-}
-
-model color {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique @db.VarChar(50)
-  created_on  DateTime  @db.Timestamp(0)
-  modified_on DateTime  @default(now()) @db.Timestamp(0)
-  product     product[]
-}
-
-model size {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique @db.VarChar(50)
-  created_on  DateTime  @db.Timestamp(0)
-  modified_on DateTime  @default(now()) @db.Timestamp(0)
-  product     product[]
 }
 
 model category {
@@ -180,4 +162,22 @@ model deal {
   product     product  @relation(fields: [productId], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
+}
+
+model grievance {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model contact {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

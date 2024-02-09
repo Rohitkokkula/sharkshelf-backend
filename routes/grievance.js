@@ -1,4 +1,4 @@
-import controller from "../controllers/size.js"
+import controller from "../controllers/faq.js"
 import express from "express";
 const router = express.Router();
 router

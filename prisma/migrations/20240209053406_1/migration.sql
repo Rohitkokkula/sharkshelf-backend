@@ -202,9 +202,6 @@ CREATE TABLE "deal" (
 CREATE UNIQUE INDEX "FAQ_question_key" ON "FAQ"("question");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "product_name_key" ON "product"("name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "color_name_key" ON "color"("name");
 
 -- CreateIndex
@@ -212,9 +209,6 @@ CREATE UNIQUE INDEX "size_name_key" ON "size"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "category_name_key" ON "category"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "subcategory_name_key" ON "subcategory"("name");
 
 -- AddForeignKey
 ALTER TABLE "cart" ADD CONSTRAINT "cart_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE SET NULL ON UPDATE CASCADE;

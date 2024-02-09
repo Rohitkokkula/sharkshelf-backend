@@ -3,7 +3,7 @@ import crud from "../utils/crud.js"
 
 let include ={product:true};
 
-const get = async (req, res, next) => crud.get(req,res,next,prisma.cart,include);
+const get = async (req, res, next) => crud.get(req,res,next,prisma.cart,include,{user_id:Number(req.user.id)});
 const getbyid = async (req, res, next) => crud.getbyid(req,res,next,prisma.cart,include);
 const deletebyid = async (req, res, next) => crud.deletebyid(req,res,next,prisma.cart,include);
 const put = async (req, res, next) => crud.update(req,res,next,prisma.cart,required,include);
