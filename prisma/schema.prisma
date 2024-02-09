@@ -7,7 +7,7 @@ datasource db {
   url      = env("DB")
 }
 
-model FAQ {
+model faq {
   id          Int      @id @default(autoincrement())
   question    String   @unique @db.VarChar(255)
   answer      String   @db.Text
@@ -52,12 +52,15 @@ model product {
   id             Int          @id @default(autoincrement())
   name           String       @db.VarChar(255)
   description    String       @db.Text
-  imageurl       String       @db.VarChar(255)
   price          Float
   offer_price    Float
   status         Boolean      @default(true)
   color          String?
   size           String?
+  rating         Float?
+  stock          Int          @default(0)
+  brand          String       @default("Sharkshelf") @db.VarChar(50)
+  images        String[]
   category_id    Int?
   category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)
   subcategory_id Int?
@@ -93,11 +96,11 @@ model subcategory {
 
 model address {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  user_id     Int
   street      String
   city        String
   state       String
-  postalCode  String
+  postal_code  String
   country     String
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now())
@@ -105,37 +108,20 @@ model address {
 
 model review {
   id          Int      @id @default(autoincrement())
-  userId      Int
-  product     product  @relation(fields: [productId], references: [id])
-  productId   Int
+  user_id      Int
+  product     product  @relation(fields: [product_id], references: [id])
+  product_id   Int
   rating      Int // Rating on a scale (e.g., 1-5)
   comment     String?
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now())
 }
 
-model menu {
-  id          Int       @id @default(autoincrement())
-  name        String
-  created_on  DateTime  @db.Timestamp(0)
-  modified_on DateTime  @default(now())
-  submenu     submenu[]
-}
-
-model submenu {
-  id        Int      @id @default(autoincrement())
-  name      String
-  menu      menu     @relation(fields: [menuId], references: [id])
-  menuId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model wishlist {
   id          Int      @id @default(autoincrement())
-  userId      Int
-  productId   Int
-  product     product  @relation(fields: [productId], references: [id])
+  user_id      Int
+  product_id   Int
+  product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
 }
@@ -150,16 +136,16 @@ model banner {
 
 model popular {
   id          Int      @id @default(autoincrement())
-  productId   Int
-  product     product  @relation(fields: [productId], references: [id])
+  product_id   Int
+  product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
 }
 
 model deal {
   id          Int      @id @default(autoincrement())
-  productId   Int
-  product     product  @relation(fields: [productId], references: [id])
+  product_id   Int
+  product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
 }
@@ -168,8 +154,8 @@ model grievance {
   id          Int      @id @default(autoincrement())
   title       String
   description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  created_on   DateTime @default(now())
+  updated_on   DateTime @updatedAt
 }
 
 model contact {
@@ -178,6 +164,6 @@ model contact {
   email       String
   phone       String
   description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  created_on   DateTime @default(now())
+  updated_on   DateTime @updatedAt
 }
