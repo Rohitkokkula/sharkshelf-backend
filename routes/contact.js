@@ -1,4 +1,4 @@
-import controller from "../controllers/grievance.js"
+import controller from "../controllers/contact.js"
 import express from "express";
 const router = express.Router();
 router

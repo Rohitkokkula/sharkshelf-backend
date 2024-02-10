@@ -154,6 +154,8 @@ model grievance {
   id          Int      @id @default(autoincrement())
   title       String
   description String
+  status      Boolean  @default(true)
+  user_id     Int?
   created_on   DateTime @default(now())
   updated_on   DateTime @updatedAt
 }
@@ -164,6 +166,7 @@ model contact {
   email       String
   phone       String
   description String
+  status      Boolean  @default(true)
   created_on   DateTime @default(now())
   updated_on   DateTime @updatedAt
 }
