@@ -11,6 +11,8 @@ import { sendresponse } from '../utils/utils.js';
 import cartRoutes from "../routes/cart.js";
 import contactRoutes from "../routes/contact.js";
 import grievanceRoutes from "../routes/grievance.js";
+import bannerRoutes from "../routes/banner.js";
+import wishlistRoutes from "../routes/wishlist.js";
 
 export default (app) => {
     app.get('/', async (req, res) => res.send('Hello! Welcome To SHARKSHELF'));
@@ -25,6 +27,11 @@ export default (app) => {
     app.use("/cart",cartRoutes);
     app.use("/contact",contactRoutes);
     app.use("/grievance",grievanceRoutes);
+    app.use("/banner",bannerRoutes);
+    app.use("/wishlist",wishlistRoutes);
+    app.use("/contact",(req,res,next)=>sendresponse(res, {"contact":"Contact Us" },200,req));
+    app.use("/about",(req,res,next)=>sendresponse(res, {"about":"About Us" },200,req));
+    app.use("/privacy",(req,res,next)=>sendresponse(res, {"privacy":"Privacy Policy" },200,req));
     app.use("/terms",(req,res,next)=>sendresponse(res, {"terms":"Terms and Conditions" },200,req));
     app.use((req, res, next) => next(new ApiError(401,'Not found')));
     app.use(errorHandler);
