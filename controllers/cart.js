@@ -1,5 +1,6 @@
 import { prisma } from "../initializer/initprisma.js";
 import crud from "../utils/crud.js"
+import { sendresponse } from "../utils/utils.js";
 
 let include ={product:true};
 
@@ -8,12 +9,23 @@ const getbyid = async (req, res, next) => crud.getbyid(req,res,next,prisma.cart,
 const deletebyid = async (req, res, next) => crud.deletebyid(req,res,next,prisma.cart,include);
 const put = async (req, res, next) => crud.update(req,res,next,prisma.cart,required,include);
 
+
 const post = async (req, res, next) => {
-    let { product_id,quantity } = req.body;
-    const required = { product_id,quantity };
-    const user_id = Number(req.user.id);
-    req.body.user_id = user_id;
-    crud.create(req,res,next,prisma.cart,required,include,{product_id,user_id});
+    try {
+        let { cart } = req.body;
+        const user_id = Number(req.user.id);
+        const created_on = new Date();
+        for (let i = 0; i < cart.length; i++) {
+            cart[i].user_id = user_id;
+            cart[i].created_on = created_on;
+        }
+        req.body.user_id = user_id;
+        await prisma.cart.deleteMany({ where: { user_id } });
+        const data = await prisma.cart.createMany({ data: cart });
+        sendresponse(res, data, 201, req);
+    } catch (e) {
+        next(e);
+    }
 }
 
 export default{ get, getbyid, post, put, deletebyid };
