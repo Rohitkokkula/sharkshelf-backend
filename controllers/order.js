@@ -15,7 +15,7 @@ const post = async (req, res, next) => {
     delete req.body.items;
     items = items ? items : [];
     let order = await prisma.order.create({
-        data: { ...req.body,user_id:req.user.id, "created_on": new Date(), order_item: { createMany: { data: items } } },
+        data: { ...req.body,user_id:Number(req.user.id), "created_on": new Date(), order_item: { createMany: { data: items } } },
         include
     });
     return sendresponse(res, order, 201,req);
