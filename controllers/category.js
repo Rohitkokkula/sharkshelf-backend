@@ -9,8 +9,8 @@ const deletebyid = async (req, res, next) => crud.deletebyid(req,res,next,prisma
 const put = async (req, res, next) => crud.update(req,res,next,prisma.category,required,include);
 
 const post = async (req, res, next) => {
-    let { name } = req.body;
-    let required = { name };
+    let { name, image } = req.body;
+    let required = { name, image };
     crud.create(req,res,next,prisma.category,required,include,{name});
 }
 
