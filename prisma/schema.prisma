@@ -60,6 +60,7 @@ model product {
   rating         Float?
   stock          Int          @default(0)
   brand          String       @default("Sharkshelf") @db.VarChar(50)
+  theme          String       @default("coder") @db.VarChar(50)
   images        String[]
   category_id    Int?
   category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)

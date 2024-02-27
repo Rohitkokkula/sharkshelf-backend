@@ -2,7 +2,15 @@
 TRUNCATE TABLE cart,faq, "order", order_item, product, category, subcategory, address, review, wishlist, banner, popular, deal, grievance, contact RESTART IDENTITY CASCADE;
 
 DO $$ 
+
+DECLARE
+  dynamic_image TEXT;
+
 BEGIN
+
+  -- dynamic_image := 'https://source.unsplash.com/1600x900/?product';
+  dynamic_image := '{{dynamic_image}}';
+
   -- Generate 100 FAQs with unique questions
   FOR i IN 1..100 LOOP
     INSERT INTO faq (question, answer, status, created_on, modified_on)
@@ -35,16 +43,14 @@ BEGIN
   -- Categories
   INSERT INTO category (name,image, created_on, modified_on)
   VALUES
-    ('Men','{{image}}', current_timestamp, current_timestamp),
-    ('Women','{{image}}', current_timestamp, current_timestamp),
-    ('Kids','{{image}}', current_timestamp, current_timestamp),
-    ('Electronics','{{image}}', current_timestamp, current_timestamp),
-    ('Home & Kitchen','{{image}}', current_timestamp, current_timestamp),
-    ('Sports','{{image}}', current_timestamp, current_timestamp),
-    ('Books','{{image}}', current_timestamp, current_timestamp),
-    ('Personal Care','{{image}}', current_timestamp, current_timestamp),
-    ('Toys','{{image}}', current_timestamp, current_timestamp),
-    ('Automotive','{{image}}', current_timestamp, current_timestamp);
+    ('Men',dynamic_image, current_timestamp, current_timestamp),
+    ('Women',dynamic_image, current_timestamp, current_timestamp),
+    ('Kids',dynamic_image, current_timestamp, current_timestamp),
+    ('Electronics',dynamic_image, current_timestamp, current_timestamp),
+    ('Home & Kitchen',dynamic_image, current_timestamp, current_timestamp),
+    ('Sports',dynamic_image, current_timestamp, current_timestamp),
+    ('Books',dynamic_image, current_timestamp, current_timestamp),
+    ('Personal Care',dynamic_image, current_timestamp, current_timestamp);
 
   -- Subcategories for 'Men'
   FOR i IN 1..5 LOOP
@@ -57,19 +63,20 @@ BEGIN
       (i || '_Home', 5, current_timestamp, current_timestamp),
       (i || '_Sports', 6, current_timestamp, current_timestamp),
       (i || '_Books', 7, current_timestamp, current_timestamp),
-      (i || '_PersonalCare', 8, current_timestamp, current_timestamp),
-      (i || '_Toys', 9, current_timestamp, current_timestamp),
-      (i || '_Automotive', 10, current_timestamp, current_timestamp);
+      (i || '_PersonalCare', 8, current_timestamp, current_timestamp);
   END LOOP;
 
   -- Products
   FOR i IN 1..100 LOOP
     INSERT INTO product (name, description, price, offer_price, color, size, rating, stock, images, category_id, subcategory_id, created_on, modified_on)
     VALUES
-      ('Casual Shirt ' || i, 'High-quality casual shirt', random() * 50 + 20, random() * 10 + 10, 'Blue', 'M', random() * 5, floor(random() * 50), ARRAY['casual_shirt_1.jpg', 'casual_shirt_2.jpg'], 1, 1, current_timestamp, current_timestamp),
-      ('Outerwear ' || i, 'Stylish outerwear for women', random() * 80 + 30, random() * 20 + 20, 'Black', 'L', random() * 5, floor(random() * 30), ARRAY['outerwear_1.jpg', 'outerwear_2.jpg'], 2, 5, current_timestamp, current_timestamp),
-      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY['fitness_equipment_1.jpg', 'fitness_equipment_2.jpg'], 6, 16, current_timestamp, current_timestamp),
-      ('Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY['smartphone_1.jpg', 'smartphone_2.jpg'], 4, 11, current_timestamp, current_timestamp);
+      ('Casual Shirt ' || i, 'High-quality casual shirt', random() * 50 + 20, random() * 10 + 10, 'Blue', 'M', random() * 5, floor(random() * 50), ARRAY[dynamic_image], 1, 1, current_timestamp, current_timestamp),
+      ('Outerwear ' || i, 'Stylish outerwear for women', random() * 80 + 30, random() * 20 + 20, 'Black', 'L', random() * 5, floor(random() * 30), ARRAY[dynamic_image], 2, 2, current_timestamp, current_timestamp),
+      ('Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 5, 13, current_timestamp, current_timestamp),
+      ('Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 4, 12, current_timestamp, current_timestamp),
+      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 6, 14, current_timestamp, current_timestamp),
+      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 7, 15, current_timestamp, current_timestamp),
+      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 8, 16, current_timestamp, current_timestamp);
   END LOOP;
  
  -- Cart
