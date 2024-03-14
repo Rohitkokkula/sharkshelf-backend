@@ -9,7 +9,7 @@ dotenv.config();
 async function gettoken(data) {
     const token = auth.getToken(data.email, data.id, data.role_id);
     const user = await prisma.users.findUnique({ where: { user_id: data.id } });
-    if (!user) await prisma.users.create({ data: { user_id: data.id, token: token } });
+    if (!user) await prisma.users.create({ data: { user_id: data.id, token: token,email:data.email,name:data.name,created_on:new Date() } });
     else await prisma.users.update({ where: { user_id: data.id }, data: { token: token } });
     return token;
 }

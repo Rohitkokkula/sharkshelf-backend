@@ -11,6 +11,18 @@ CREATE TABLE "faq" (
 );
 
 -- CreateTable
+CREATE TABLE "users" (
+    "user_id" INTEGER NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "token" VARCHAR(255),
+    "status" TEXT NOT NULL DEFAULT 'ACTIVE',
+    "deleted_on" TIMESTAMP(0),
+    "created_on" TIMESTAMP(0) NOT NULL,
+    "modified_on" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
 CREATE TABLE "cart" (
     "id" SERIAL NOT NULL,
     "quantity" INTEGER NOT NULL,
@@ -60,6 +72,7 @@ CREATE TABLE "product" (
     "rating" DOUBLE PRECISION,
     "stock" INTEGER NOT NULL DEFAULT 0,
     "brand" VARCHAR(50) NOT NULL DEFAULT 'Sharkshelf',
+    "theme" VARCHAR(50) NOT NULL DEFAULT 'coder',
     "images" TEXT[],
     "category_id" INTEGER,
     "subcategory_id" INTEGER,
@@ -95,7 +108,7 @@ CREATE TABLE "subcategory" (
 CREATE TABLE "address" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "street" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "postal_code" TEXT NOT NULL,
@@ -163,19 +176,6 @@ CREATE TABLE "deal" (
 );
 
 -- CreateTable
-CREATE TABLE "grievance" (
-    "id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "status" BOOLEAN NOT NULL DEFAULT true,
-    "user_id" INTEGER,
-    "created_on" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_on" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "grievance_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "contact" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -191,6 +191,12 @@ CREATE TABLE "contact" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "faq_question_key" ON "faq"("question");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_user_id_key" ON "users"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "category_name_key" ON "category"("name");

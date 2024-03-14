@@ -16,6 +16,17 @@ model faq {
   modified_on DateTime @default(now()) @db.Timestamp(0)
 }
 
+model users {
+  user_id         Int            @unique
+  email           String         @unique
+  name            String
+  token           String?        @db.VarChar(255)
+  status          String         @default("ACTIVE")
+  deleted_on      DateTime?      @db.Timestamp(0)
+  created_on      DateTime       @db.Timestamp(0)
+  modified_on     DateTime       @default(now()) @db.Timestamp(0)
+}
+
 model cart {
   id          Int      @id @default(autoincrement())
   quantity    Int
@@ -61,7 +72,7 @@ model product {
   stock          Int          @default(0)
   brand          String       @default("Sharkshelf") @db.VarChar(50)
   theme          String       @default("coder") @db.VarChar(50)
-  images        String[]
+  images         String[]
   category_id    Int?
   category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)
   subcategory_id Int?
@@ -99,10 +110,10 @@ model subcategory {
 model address {
   id          Int      @id @default(autoincrement())
   user_id     Int
-  street      String
+  address     String
   city        String
   state       String
-  postal_code  String
+  postal_code String
   country     String
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now())
@@ -110,9 +121,9 @@ model address {
 
 model review {
   id          Int      @id @default(autoincrement())
-  user_id      Int
+  user_id     Int
   product     product  @relation(fields: [product_id], references: [id])
-  product_id   Int
+  product_id  Int
   rating      Int // Rating on a scale (e.g., 1-5)
   comment     String?
   created_on  DateTime @db.Timestamp(0)
@@ -121,8 +132,8 @@ model review {
 
 model wishlist {
   id          Int      @id @default(autoincrement())
-  user_id      Int
-  product_id   Int
+  user_id     Int
+  product_id  Int
   product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
@@ -131,7 +142,7 @@ model wishlist {
 model banner {
   id          Int      @id @default(autoincrement())
   title       String
-  image    String
+  image       String
   status      Boolean  @default(true)
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
@@ -139,7 +150,7 @@ model banner {
 
 model popular {
   id          Int      @id @default(autoincrement())
-  product_id   Int
+  product_id  Int
   product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
@@ -147,20 +158,10 @@ model popular {
 
 model deal {
   id          Int      @id @default(autoincrement())
-  product_id   Int
+  product_id  Int
   product     product  @relation(fields: [product_id], references: [id])
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now()) @db.Timestamp(0)
-}
-
-model grievance {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  status      Boolean  @default(true)
-  user_id     Int?
-  created_on   DateTime @default(now())
-  updated_on   DateTime @updatedAt
 }
 
 model contact {
@@ -170,6 +171,6 @@ model contact {
   phone       String
   description String
   status      Boolean  @default(true)
-  created_on   DateTime @default(now())
-  updated_on   DateTime @updatedAt
+  created_on  DateTime @default(now())
+  updated_on  DateTime @updatedAt
 }
