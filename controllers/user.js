@@ -34,8 +34,8 @@ const updateprofile = async (req, res, next) => {
     try {
         const data = await axios.put(process.env.OCEANAUTH+"/user/profile/"+req.user.id,req.body,{ headers: { Authorization: "Bearer "+process.env.APP_TOKEN } });
         if(data.data.message!="success") throw new ApiError(401, data.data.message);
-        const {email,name} = data.data.data;
-        await prisma.users.update({ where: { user_id: data.id }, data: { email,name } });
+        const {email,name,id} = data.data.data;
+        await prisma.users.update({ where: { user_id: id }, data: { email,name } });
         return sendresponse(res, { user: data.data.data }, 201,req);    
     } catch (e) {
         next(e);
@@ -46,6 +46,8 @@ const deleteprofile = async (req, res, next) => {
     try {
         const data = await axios.delete(process.env.OCEANAUTH+"/user/deleteprofile/"+req.user.id,{ headers: { Authorization: "Bearer "+process.env.APP_TOKEN } });
         if(data.data.message!="success") throw new ApiError(401, data.data.message);
+        const {id} = data.data.data;
+        await prisma.users.update({ where: { user_id: id }, data: { status:"INACTIVE" } });
         return sendresponse(res, { user: data.data.data }, 201,req);    
     } catch (e) {
         next(e);
