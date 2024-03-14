@@ -14,12 +14,14 @@ import dealRoutes from "../routes/deal.js";
 import bannerRoutes from "../routes/banner.js";
 import wishlistRoutes from "../routes/wishlist.js";
 import authRoutes from "../routes/auth.js";
+import userRoutes from "../routes/user.js";
 
 export default (app) => {
     app.get('/', async (req, res) => res.send('Hello! Welcome To SHARKSHELF'));
     app.get('/ping', async (req, res) => res.send('Pong!'));
     app.use("/auth",authRoutes);
     app.use(auth.checkToken);
+    app.use("/user",userRoutes);
     app.use("/order",orderRoutes);
     app.use("/product",productRoutes);
     app.use("/faq", faqRoutes);

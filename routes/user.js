@@ -3,6 +3,7 @@ import express from "express";
 const router = express.Router()
 
 router
-.post("/login", usercontroller.login)
-.post("/register", usercontroller.register)
+.get("/profile", usercontroller.getprofile)
+.put("/profile", usercontroller.updateprofile)
+.delete("/profile", usercontroller.deleteprofile)
 export default router;
