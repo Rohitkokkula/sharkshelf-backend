@@ -1,16 +1,23 @@
 -- Clear all tables
-TRUNCATE TABLE cart,faq, "order", order_item, product, category, subcategory, address, review, wishlist, banner, popular, deal, grievance, contact RESTART IDENTITY CASCADE;
+TRUNCATE TABLE users,cart,faq, "order", order_item, product, category, subcategory, address, review, wishlist, banner, popular, deal, contact RESTART IDENTITY CASCADE;
 
 DO $$ 
 
 DECLARE
   dynamic_image TEXT;
+  token TEXT;
 
 BEGIN
 
   -- dynamic_image := 'https://source.unsplash.com/1600x900/?product';
   dynamic_image := '{{dynamic_image}}';
+  token := '{{token}}';
 
+  FOR i IN 100..115 LOOP
+    INSERT INTO users (user_id,name,email, token,status,deleted_on, created_on, modified_on)
+    VALUES
+        (i,'shiva','shiva'||i||'@gmail.com',token,'ACTIVE',current_timestamp,current_timestamp, current_timestamp);
+  END LOOP;
   -- Generate 100 FAQs with unique questions
   FOR i IN 1..100 LOOP
     INSERT INTO faq (question, answer, status, created_on, modified_on)
@@ -19,18 +26,11 @@ BEGIN
   END LOOP;
 
   -- Generate Addresses for Users 1 to 50 (2 addresses each)
-  FOR user_id IN 1..50 LOOP
-    INSERT INTO address (user_id, street, city, state, postal_code, country, created_on, modified_on)
+  FOR user_id IN 1..15 LOOP
+    INSERT INTO address (user_id, address,city, state, postal_code, country, created_on, modified_on)
     VALUES
-      (user_id, 'Street ' || user_id || '_1', 'City ' || user_id || '_1', 'State ' || user_id || '_1', 'PostalCode ' || user_id || '_1', 'Country ' || user_id || '_1', current_timestamp, current_timestamp),
-      (user_id, 'Street ' || user_id || '_2', 'City ' || user_id || '_2', 'State ' || user_id || '_2', 'PostalCode ' || user_id || '_2', 'Country ' || user_id || '_2', current_timestamp, current_timestamp);
-  END LOOP;
-
-  -- Grievance
-  FOR i IN 1..50 LOOP
-    INSERT INTO grievance (title, description, created_on, updated_on)
-    VALUES
-      ('Grievance ' || i,'Description of grievance ' || i,current_timestamp,current_timestamp);
+      ((user_id%15)+101, 'address ' || user_id || '_1', 'City ' || user_id || '_1', 'State ' || user_id || '_1', 'PostalCode ' || user_id || '_1', 'Country ' || user_id || '_1', current_timestamp, current_timestamp),
+      ((user_id%15)+101, 'address ' || user_id || '_2', 'City ' || user_id || '_2', 'State ' || user_id || '_2', 'PostalCode ' || user_id || '_2', 'Country ' || user_id || '_2', current_timestamp, current_timestamp);
   END LOOP;
 
   -- Contact
@@ -82,9 +82,9 @@ BEGIN
  -- Cart
   FOR i IN 1..50 LOOP
     FOR j IN 1..3 LOOP
-      INSERT INTO cart (user_id, product_id, quantity, created_on, modified_on)
+      INSERT INTO cart(user_id, product_id, quantity, created_on, modified_on)
       VALUES
-        (i, floor(random() * 100) + 1, floor(random() * 5) + 1, current_timestamp, current_timestamp);
+        ((i%15)+101, floor(random() * 5) + 1,j, current_timestamp, current_timestamp);
     END LOOP;
   END LOOP;
   
@@ -92,7 +92,7 @@ BEGIN
   FOR i IN 1..500 LOOP
     INSERT INTO "order" (total, payment_id, pay_method, delivery_status, order_mode, user_id, created_on, modified_on)
     VALUES
-    (1000, 'payment' || i, 'method' || i, 'pending', 'mode' || i, i, current_timestamp, current_timestamp);
+    (1000, 'payment' || i, 'method' || i, 'pending', 'mode' || i, (i%15)+101, current_timestamp, current_timestamp);
   END LOOP;
 
   -- Order Items
@@ -107,7 +107,7 @@ BEGIN
     FOR j IN 1..2 LOOP
       INSERT INTO wishlist (user_id, product_id, created_on, modified_on)
       VALUES
-        (i, floor(random() * 100) + 1, current_timestamp, current_timestamp);
+        ((i%15)+101, floor(random() * 100) + 1, current_timestamp, current_timestamp);
     END LOOP;
   END LOOP;
 
@@ -124,4 +124,12 @@ BEGIN
     VALUES
       (floor(random() * 100) + 1, current_timestamp, current_timestamp);
   END LOOP;
+
+  -- Reviews
+  FOR i IN 1..100 LOOP
+    INSERT INTO review (user_id, product_id, rating, comment, created_on, modified_on)
+    VALUES
+      ((i%15)+101, floor(random() * 100) + 1, random() * 5, 'Review ' || i, current_timestamp, current_timestamp);
+  END LOOP;
+
 END $$;

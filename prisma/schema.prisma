@@ -17,14 +17,15 @@ model faq {
 }
 
 model users {
-  user_id         Int            @unique
-  email           String         @unique
-  name            String
-  token           String?        @db.VarChar(255)
-  status          String         @default("ACTIVE")
-  deleted_on      DateTime?      @db.Timestamp(0)
-  created_on      DateTime       @db.Timestamp(0)
-  modified_on     DateTime       @default(now()) @db.Timestamp(0)
+  user_id     Int       @unique
+  email       String    @unique
+  name        String
+  token       String?   @db.VarChar(255)
+  status      String    @default("ACTIVE")
+  deleted_on  DateTime? @db.Timestamp(0)
+  created_on  DateTime  @db.Timestamp(0)
+  modified_on DateTime  @default(now()) @db.Timestamp(0)
+  review      review[]
 }
 
 model cart {
@@ -59,6 +60,18 @@ model order_item {
   order      order?   @relation(fields: [order_id], references: [id], onDelete: SetNull)
 }
 
+model review {
+  id          Int      @id @default(autoincrement())
+  rating      Int // Rating on a scale (e.g., 1-5)
+  comment     String?
+  user_id     Int
+  user        users    @relation(fields: [user_id], references: [user_id])
+  product_id  Int
+  product     product  @relation(fields: [product_id], references: [id])
+  created_on  DateTime @db.Timestamp(0)
+  modified_on DateTime @default(now()) @db.Timestamp(0)
+}
+
 model product {
   id             Int          @id @default(autoincrement())
   name           String       @db.VarChar(255)
@@ -72,6 +85,8 @@ model product {
   stock          Int          @default(0)
   brand          String       @default("Sharkshelf") @db.VarChar(50)
   theme          String       @default("coder") @db.VarChar(50)
+  seller         String       @default("Sharkshelf") @db.VarChar(50)
+  specification  String
   images         String[]
   category_id    Int?
   category       category?    @relation(fields: [category_id], references: [id], onDelete: SetNull)
@@ -115,17 +130,6 @@ model address {
   state       String
   postal_code String
   country     String
-  created_on  DateTime @db.Timestamp(0)
-  modified_on DateTime @default(now())
-}
-
-model review {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  product     product  @relation(fields: [product_id], references: [id])
-  product_id  Int
-  rating      Int // Rating on a scale (e.g., 1-5)
-  comment     String?
   created_on  DateTime @db.Timestamp(0)
   modified_on DateTime @default(now())
 }
