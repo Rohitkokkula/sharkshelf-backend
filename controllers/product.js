@@ -1,17 +1,17 @@
 import { prisma } from "../initializer/initprisma.js";
 import crud from "../utils/crud.js"
 
-const include = {};
+const include = {reviews: true,subcategory: true,category: true};
 
 const get = async (req, res, next) => {
     if(req.query.category_id && req.query.subcategory_id) {
-        return crud.get(req, res, next, prisma.product,include, { category_id: Number(req.query.category_id),subcategory_id: Number(req.query.subcategory_id)});
+        return crud.get(req, res, next, prisma.product, { category_id: Number(req.query.category_id),subcategory_id: Number(req.query.subcategory_id)});
     } else if(req.query.category_id) {
-        return crud.get(req, res, next, prisma.product,include, { category_id: Number(req.query.category_id)});
+        return crud.get(req, res, next, prisma.product, { category_id: Number(req.query.category_id)});
     } else if(req.query.subcategory_id) {
-        return crud.get(req, res, next, prisma.product,include, { subcategory_id: Number(req.query.subcategory_id)});
+        return crud.get(req, res, next, prisma.product, { subcategory_id: Number(req.query.subcategory_id)});
     } else {
-        return crud.get(req, res, next, prisma.product,include);
+        return crud.get(req, res, next, prisma.product);
     }
     // crud.get(req, res, next, prisma.product,include, { category_id: Number(req.query.category_id),subcategory_id: Number(req.query.subcategory_id)});
 }
