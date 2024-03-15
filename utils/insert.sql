@@ -10,7 +10,7 @@ DECLARE
 BEGIN
 
   -- dynamic_image := 'https://source.unsplash.com/1600x900/?product';
-  dynamic_image := '{{dynamic_image}}';
+  dynamic_image := '{{image}}';
   token := '{{token}}';
 
   FOR i IN 100..115 LOOP
@@ -126,10 +126,12 @@ BEGIN
   END LOOP;
 
   -- Reviews
-  FOR i IN 1..100 LOOP
+  FOR i IN 1..700 LOOP
     INSERT INTO review (user_id, product_id, rating, comment, created_on, modified_on)
     VALUES
-      ((i%15)+101, floor(random() * 100) + 1, random() * 5, 'Review ' || i, current_timestamp, current_timestamp);
+      ((i%15)+101, i, random() * 5, 'Review ' || i, current_timestamp, current_timestamp),
+      ((i%15)+101, i, random() * 5, 'Review ' || i, current_timestamp, current_timestamp),
+      ((i%15)+101, i, random() * 5, 'Review ' || i, current_timestamp, current_timestamp);
   END LOOP;
 
 END $$;

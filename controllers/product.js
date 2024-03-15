@@ -1,7 +1,7 @@
 import { prisma } from "../initializer/initprisma.js";
 import crud from "../utils/crud.js"
 
-const include = {reviews: true,subcategory: true,category: true};
+const include = {review: true,subcategory: true,category: true};
 
 const get = async (req, res, next) => {
     if(req.query.category_id && req.query.subcategory_id) {
