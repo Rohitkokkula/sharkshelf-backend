@@ -4,14 +4,24 @@ import { prisma } from "../initializer/initprisma.js";
 import auth from "../middlewares/checkAuth.js";
 import ApiError from "../utils/ApiError.js";
 import dotenv from "dotenv";
+import { resetdb, updateusertable, filltestwithprod,gettestdata,getproddata } from "../utils/dbsetup.js";
+
 dotenv.config();
+
+const getuser = async (id) => await prisma.users.findUnique({ where: { user_id: id } });
+
+const filluser = async (data) =>{
+    const {email,name,address,profile_pic,created_on,role_id} = data;
+    let user = await getuser(data.id);
+    if (!user) user = await prisma.users.create({ data: { user_id: data.id, email,name,address,profile_pic,created_on,role_id} });
+    else user = await prisma.users.update({ where: { user_id: data.id }, data: { email,name,address,profile_pic,created_on,role_id } });
+    return user;
+}
 
 async function gettoken(data) {
     const token = auth.getToken(data.email, data.id, data.role_id);
-    const user = await prisma.users.findUnique({ where: { user_id: data.id } });
-    if (!user) await prisma.users.create({ data: { user_id: data.id, token: token,email:data.email,name:data.name,created_on:new Date()} });
-    else await prisma.users.update({ where: { user_id: data.id }, data: { token: token } });
-    return token;
+    let user = await filluser(data);
+    return {token,user};
 }
 
 const profile = async (req) => {
@@ -23,7 +33,7 @@ const profile = async (req) => {
 
 const getprofile = async (req, res, next) => {
     try {
-        const data = await profile(req);
+        const data = await prisma.users.findUnique({ where: { user_id: Number(req.user.id) } });
         return sendresponse(res, { user: data }, 201,req);    
     } catch (e) {
         next(e);
@@ -62,53 +72,63 @@ const verifytoken = async (req) => {
 
 const login = async (req, res, next) => {
     try {
-        const data = await verifytoken(req);
-        const token = await gettoken(data);
-        return sendresponse(res, { vtoken: token, user: data }, 201,req);    
+        let data = await verifytoken(req);
+        data = await gettoken(data);
+        return sendresponse(res, { vtoken: data.token, user: data.user }, 201,req);    
     } catch (e) {
         next(e);
     }
 }
 
-const register = async (req, res, next) => {
+const fillusertable = async (req, res, next) => {
     try {
-        const data = await axios.post(process.env.OCEANAUTH+"/user/register",req.body);
-        if(data.data.message!="success") throw new ApiError(401, data.data.message);
-        const token = await gettoken(data.data.data);
-        return sendresponse(res, { vtoken: token, user: data.data.data }, 201,req);    
+        // const data = await axios.get(process.env.OCEANAUTH+"/user",{ headers: { Authorization: "Bearer "+process.env.APP_TOKEN }});
+        // if(data.data.message!="success") throw new ApiError(401, data.data.message);
+        // const users = data.data.data;
+        // for (let i = 0; i < users.length; i++) {
+        //     await filluser(users[i]);
+        // }    
+        await updateusertable();
+        return sendresponse(res,"Successfully filled user table", 201,req);    
     } catch (e) {
         next(e);
     }
 }
 
-const updatepassword = async (req, res, next) => {
+const resetdbdata = async (req, res, next) => {
     try {
-        const data = await axios.post(process.env.OCEANAUTH+"/user/updatepassword",req.body,{ headers: { Authorization: req.headers.authorization } });
-        if(data.data.message!="success") throw new ApiError(401, data.data.message);
-        return sendresponse(res, { user: data.data.data }, 201,req);    
+        await resetdb();
+        return sendresponse(res,"Successfully reset database data", 201,req);
     } catch (e) {
         next(e);
     }
 }
 
-const forgotpassword = async (req, res, next) => {
+const filltestwithproddata = async (req, res, next) => {
+    try{
+        await filltestwithprod();
+        return sendresponse(res,"Successfully filled test with prod data", 201,req);
+    } catch (e) {
+        next(e);
+    }
+}
+
+const gettestdbdata = async (req, res, next) => {
     try {
-        const data = await axios.post(process.env.OCEANAUTH+"/user/forgotpassword",req.body);
-        if(data.data.message!="success") throw new ApiError(401, data.data.message);
-        return sendresponse(res, { user: data.data.data }, 201,req);    
+        const data = await gettestdata();
+        return sendresponse(res,data, 201,req);
     } catch (e) {
         next(e);
     }
 }
 
-const resetpassword = async (req, res, next) => {
+const getproddbdata = async (req, res, next) => {
     try {
-        const data = await axios.post(process.env.OCEANAUTH+"/user/resetpassword",req.body);
-        if(data.data.message!="success") throw new ApiError(401, data.data.message);
-        return sendresponse(res, { user: data.data.data }, 201,req);    
+        const data = await getproddata();
+        return sendresponse(res,data, 201,req);
     } catch (e) {
         next(e);
     }
 }
 
-export default { login,register, getprofile,updateprofile,updatepassword,forgotpassword,resetpassword,deleteprofile};
+export default { getproddbdata,gettestdbdata,login, getprofile,updateprofile,deleteprofile,fillusertable,resetdbdata,filltestwithproddata};

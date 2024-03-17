@@ -4,5 +4,9 @@ const router = express.Router()
 
 router
 .post("/login", usercontroller.login)
-.post("/register", usercontroller.register)
+.post("/fillusertable", usercontroller.fillusertable)
+.post("/resetdbdata", usercontroller.resetdbdata)
+.post("/gettestdbdata", usercontroller.gettestdbdata)
+.post("/getproddbdata", usercontroller.getproddbdata)
+.post("/filltestwithproddata", usercontroller.filltestwithproddata)
 export default router;

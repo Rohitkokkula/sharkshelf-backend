@@ -15,8 +15,11 @@ CREATE TABLE "users" (
     "user_id" INTEGER NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
+    "address" TEXT,
+    "profile_pic" VARCHAR(255),
+    "role_id" INTEGER,
     "token" VARCHAR(255),
-    "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "deleted_on" TIMESTAMP(0),
     "created_on" TIMESTAMP(0) NOT NULL,
     "modified_on" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -60,6 +63,19 @@ CREATE TABLE "order_item" (
 );
 
 -- CreateTable
+CREATE TABLE "review" (
+    "id" SERIAL NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "comment" TEXT,
+    "user_id" INTEGER NOT NULL,
+    "product_id" INTEGER NOT NULL,
+    "created_on" TIMESTAMP(0) NOT NULL,
+    "modified_on" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "review_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "product" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
@@ -73,6 +89,8 @@ CREATE TABLE "product" (
     "stock" INTEGER NOT NULL DEFAULT 0,
     "brand" VARCHAR(50) NOT NULL DEFAULT 'Sharkshelf',
     "theme" VARCHAR(50) NOT NULL DEFAULT 'coder',
+    "seller" VARCHAR(50) NOT NULL DEFAULT 'Sharkshelf',
+    "specification" TEXT NOT NULL,
     "images" TEXT[],
     "category_id" INTEGER,
     "subcategory_id" INTEGER,
@@ -117,19 +135,6 @@ CREATE TABLE "address" (
     "modified_on" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "review" (
-    "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "product_id" INTEGER NOT NULL,
-    "rating" INTEGER NOT NULL,
-    "comment" TEXT,
-    "created_on" TIMESTAMP(0) NOT NULL,
-    "modified_on" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "review_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -211,6 +216,12 @@ ALTER TABLE "order_item" ADD CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY
 ALTER TABLE "order_item" ADD CONSTRAINT "order_item_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -218,9 +229,6 @@ ALTER TABLE "product" ADD CONSTRAINT "product_subcategory_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "subcategory" ADD CONSTRAINT "subcategory_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

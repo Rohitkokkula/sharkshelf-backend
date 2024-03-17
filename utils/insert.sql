@@ -13,10 +13,10 @@ BEGIN
   dynamic_image := '{{image}}';
   token := '{{token}}';
 
-  FOR i IN 100..115 LOOP
-    INSERT INTO users (user_id,name,email, token,status,deleted_on, created_on, modified_on)
+  FOR i IN 1..200 LOOP
+    INSERT INTO users (user_id,name,email,address,profile_pic, token,status,deleted_on, created_on, modified_on)
     VALUES
-        (i,'shiva','shiva'||i||'@gmail.com',token,'ACTIVE',current_timestamp,current_timestamp, current_timestamp);
+        (i,'shiva','shiva'||i||'@gmail.com','Address ' || i, 'profile_pic_' || i || '.jpg',token,true,current_timestamp,current_timestamp, current_timestamp);
   END LOOP;
   -- Generate 100 FAQs with unique questions
   FOR i IN 1..100 LOOP
@@ -68,15 +68,15 @@ BEGIN
 
   -- Products
   FOR i IN 1..100 LOOP
-    INSERT INTO product (name, description, price, offer_price, color, size, rating, stock, images, category_id, subcategory_id, created_on, modified_on)
+    INSERT INTO product (specification,name, description, price, offer_price, color, size, rating, stock, images, category_id, subcategory_id, created_on, modified_on)
     VALUES
-      ('Casual Shirt ' || i, 'High-quality casual shirt', random() * 50 + 20, random() * 10 + 10, 'Blue', 'M', random() * 5, floor(random() * 50), ARRAY[dynamic_image], 1, 1, current_timestamp, current_timestamp),
-      ('Outerwear ' || i, 'Stylish outerwear for women', random() * 80 + 30, random() * 20 + 20, 'Black', 'L', random() * 5, floor(random() * 30), ARRAY[dynamic_image], 2, 2, current_timestamp, current_timestamp),
-      ('Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 5, 13, current_timestamp, current_timestamp),
-      ('Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 4, 12, current_timestamp, current_timestamp),
-      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 6, 14, current_timestamp, current_timestamp),
-      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 7, 15, current_timestamp, current_timestamp),
-      ('Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 8, 16, current_timestamp, current_timestamp);
+      ('High-quality casual shirt','Casual Shirt ' || i, 'High-quality casual shirt', random() * 50 + 20, random() * 10 + 10, 'Blue', 'M', random() * 5, floor(random() * 50), ARRAY[dynamic_image], 1, 1, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Outerwear ' || i, 'Stylish outerwear for women', random() * 80 + 30, random() * 20 + 20, 'Black', 'L', random() * 5, floor(random() * 30), ARRAY[dynamic_image], 2, 2, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 5, 13, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Smartphone ' || i, 'Latest smartphone with advanced features', random() * 1000 + 300, random() * 100 + 100, 'Silver', NULL, random() * 5, floor(random() * 10), ARRAY[dynamic_image], 4, 12, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 6, 14, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 7, 15, current_timestamp, current_timestamp),
+      ('High-quality casual shirt','Fitness Equipment ' || i, 'High-quality fitness equipment', random() * 100 + 50, random() * 30 + 30, 'Black', NULL, random() * 5, floor(random() * 20), ARRAY[dynamic_image], 8, 16, current_timestamp, current_timestamp);
   END LOOP;
  
  -- Cart
