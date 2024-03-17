@@ -76,15 +76,6 @@ const updateusertable = async () => {
   }
 };
 
-const filltestwithprod = async () => {
-  try {
-    let usersdata = await updateusertable();
-    console.log('Database data updated successfully');
-  } catch (error) {
-    console.error('Error executing query:', error);
-  }
-}
-
 const resetdb=async()=>{
   try {
     let usersdata = await resetdata(process.env.TEST_DB);
@@ -142,4 +133,20 @@ const getproddata = async () => {
   }
 }
 
-export {resetdb,updateusertable,filltestwithprod,gettestdata,getproddata};
+const filltestdatawithprod=async()=>{
+  try {
+    let data = await getproddata();
+    let dataQuery = '';
+    for (const table in data) {
+      for (const row of data[table]) {
+        dataQuery += `INSERT INTO ${table} (${Object.keys(row).join(',')}) VALUES (${Object.values(row).join(',')});`;
+      }
+    }
+    await executeQuery(dataQuery);
+    console.log('Test data filled with prod data successfully');
+  } catch (error) {
+    console.error('Error executing query:', error);
+  }
+}
+
+export {resetdb,updateusertable,filltestdatawithprod,gettestdata,getproddata};

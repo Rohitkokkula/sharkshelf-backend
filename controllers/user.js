@@ -4,7 +4,7 @@ import { prisma } from "../initializer/initprisma.js";
 import auth from "../middlewares/checkAuth.js";
 import ApiError from "../utils/ApiError.js";
 import dotenv from "dotenv";
-import { resetdb, updateusertable, filltestwithprod,gettestdata,getproddata } from "../utils/dbsetup.js";
+import { resetdb, updateusertable, filltestdatawithprod,gettestdata,getproddata } from "../utils/dbsetup.js";
 
 dotenv.config();
 
@@ -106,7 +106,7 @@ const resetdbdata = async (req, res, next) => {
 
 const filltestwithproddata = async (req, res, next) => {
     try{
-        await filltestwithprod();
+        await filltestdatawithprod();
         return sendresponse(res,"Successfully filled test with prod data", 201,req);
     } catch (e) {
         next(e);
