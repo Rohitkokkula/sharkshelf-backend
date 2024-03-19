@@ -7,8 +7,8 @@ function checkvalues(required) {
 }
 
 function sendresponse(res, data, status,req) {
-    console.log(data);
     log(req.method,req.originalUrl);
+    console.log(data);
     return res.status(status).json({ "message": "success", "data": data, "count":data==null ? 0 : data.length });
 }
 
@@ -17,6 +17,12 @@ function log(type,url) {
     url=url?url:"UNDEFINED";
     console.log("REQUEST TYPE : "+type);
     console.log("URL : "+url);
+    console.log("success");
 }
 
-export { checkvalues, sendresponse,log };
+function generaterandomcode() {
+    const code = Math.floor(100000 + Math.random() * 900000); // Generates a 4-digit code
+    return code.toString();
+}
+
+export { checkvalues, sendresponse,log,generaterandomcode };
